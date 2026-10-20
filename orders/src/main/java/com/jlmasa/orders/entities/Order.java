@@ -17,36 +17,17 @@ public class Order {
     private String status;
 
     protected Order() {}
-    public Order(UUID id, String customerId, String sku, int quantity, BigDecimal amount){
-        this.id = id;
-        this.customerId = customerId;
-        this.sku = sku;
-        this.quantity = quantity;
-        this.amount = amount;
-        this.status = "PENDING";
+    public Order(UUID id, String customerId, String sku, int quantity,
+                 BigDecimal amount) {
+        this.id = id; this.customerId = customerId; this.sku = sku;
+        this.quantity = quantity; this.amount = amount; this.status =
+                "PENDING";
     }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public String getCustomerId() {
-        return customerId;
-    }
-
-    public String getSku() {
-        return sku;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public String getStatus() {
-        return status;
-    }
+    public UUID getId() { return id; }
+    public String getCustomerId() { return customerId; }
+    public String getSku() { return sku; }
+    public int getQuantity() { return quantity; }
+    public BigDecimal getAmount() { return amount; }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 }
