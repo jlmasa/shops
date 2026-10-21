@@ -1,9 +1,10 @@
 package com.jlmasa.orders.events;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
 
 import java.util.UUID;
-
+@Component
 public class IdempotencyGuard {
     private final JdbcTemplate jdbc;
     public IdempotencyGuard(JdbcTemplate jdbc){
