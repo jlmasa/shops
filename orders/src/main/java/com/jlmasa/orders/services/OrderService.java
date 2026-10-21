@@ -1,5 +1,6 @@
 package com.jlmasa.orders.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jlmasa.orders.dtos.PlaceOrderRequest;
 import com.jlmasa.orders.entities.Order;
 import com.jlmasa.orders.events.IdempotencyGuard;
@@ -27,15 +28,18 @@ public class OrderService {
         this.json = json;
     }
     @Transactional
-    public Order place(PlaceOrderRequest r){
-        Order o = orders.save(new Order(UUID.randomUUID(),r.customerId(),r.sku(),r.quantity(),r.amount()));
-        outbox.add("orders.events", new OrderEvent(UUID.randomUUID(), "OrderCreated", o.getId(), o.getSku(), o.getQuantity(), o.getAmount()));
+    public Order place(PlaceOrderRequest r) {
+        Order o = orders.save(new Order(UUID.randomUUID(), r.customerId(),
+                r.sku(), r.quantity(), r.amount()));
+        outbox.add("orders.events",
+                new OrderEvent(UUID.randomUUID(), "OrderCreated", o.getId(),
+                        o.getSku(), o.getQuantity(), o.getAmount()));
         return o;
     }
 
-    @KafkaListener(topics = {"inventory.events", "payment.events"})
+    @KafkaListener(topics = {"inventory.events", "payments.events"})
     @Transactional
-    public void onEvent(String message) throws Exception {
+    public void onEvent(String message) throws JsonProcessingException {
         OrderEvent e = json.readValue(message, OrderEvent.class);
         if(!guard.firstTime(e.eventId())) return;
         Order o = orders.findById(e.orderId()).orElseThrow();
